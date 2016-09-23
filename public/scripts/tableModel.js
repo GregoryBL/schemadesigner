@@ -12,12 +12,13 @@ var Table = React.createClass({
   getInitialState: function() {
     return {
       mouseDown: false,
-      dragging: false
+      dragging: false,
+      left: 0,
+      top: 0
     }
   },
 
   tableStyle: function() {
-    console.log(this)
     if (this.state.dragging) {
       return {
         width: 200,
@@ -31,15 +32,19 @@ var Table = React.createClass({
       return {
         width: 200,
         height: 400,
-        backgroundColor: 'green'
+        backgroundColor: 'green',
+        position: 'absolute',
+        left: this.state.left,
+        top: this.state.top
       }
     }
   },
 
   render: function() {
+    var that = this
     return (
       <div
-        ref={function(obj) { this.boundingDiv = obj }}
+        ref={function(obj) { that.boundingDiv = obj }}
         style={this.tableStyle()}
         className="table"
         onMouseDown={this.onMouseDown}
@@ -53,8 +58,8 @@ var Table = React.createClass({
     if (event.button == LEFT_BUTTON) {
       event.stopPropagation();
       this.addEvents();
-      console.log(this)
-      pageOffset = this.boundingDiv.getBoundingClientRect();
+      console.log(this.boundingDiv)
+      var pageOffset = this.boundingDiv.getBoundingClientRect();
       this.setState({
         mouseDown: true,
         originX: event.pageX,
@@ -66,11 +71,11 @@ var Table = React.createClass({
   },
 
   onMouseMove: function(event) {
-    deltaX = event.pageX - this.state.originX;
-    deltaY = event.pageY - this.state.originY;
-    distance = Math.abs(deltaX) + Math.abs(deltaY);
+    var deltaX = event.pageX - this.state.originX;
+    var deltaY = event.pageY - this.state.originY;
+    var distance = Math.abs(deltaX) + Math.abs(deltaY);
 
-    if (!this.state.dragging && distance > DRAG_THRESHHOLD) {
+    if (!this.state.dragging && distance > DRAG_THRESHOLD) {
       this.setState({dragging: true});
     }
 
@@ -85,7 +90,6 @@ var Table = React.createClass({
   onMouseUp: function() {
     this.removeEvents();
     if (this.state.dragging) {
-      this.props.onDragStop();
       this.setState({dragging: false});
     }
   },
