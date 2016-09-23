@@ -49,7 +49,8 @@ var Table = React.createClass({
         className="table"
         onMouseDown={this.onMouseDown}
       >
-        Hey it's a table.
+        <Row />
+        <Row />
       </div>
     );
   },
@@ -58,7 +59,6 @@ var Table = React.createClass({
     if (event.button == LEFT_BUTTON) {
       event.stopPropagation();
       this.addEvents();
-      console.log(this.boundingDiv)
       var pageOffset = this.boundingDiv.getBoundingClientRect();
       this.setState({
         mouseDown: true,
